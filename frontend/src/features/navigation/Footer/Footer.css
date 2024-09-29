@@ -1,0 +1,11 @@
+/* Footer.css */
+.container {
+  max-width: 1200px; /* Ensure the footer does not stretch too wide on large screens */
+}
+
+.footer-icons {
+  display: flex;
+  justify-content: center; /* Center align icons */
+}
+
+/* Additional styles can be defined here */
