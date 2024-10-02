@@ -74,7 +74,7 @@ export async function queryBooks(
     if (barcode) {
       if (
         book.barcode.toLowerCase().includes(barcode.toLowerCase()) &&
-        !filtered.some((b) => b["barcode"])
+        !filtered.some((b) => b["barcode"] === book.barcode)
       ) {
         filtered.push(book);
       }
@@ -82,7 +82,7 @@ export async function queryBooks(
     if (title) {
       if (
         book.title.toLowerCase().includes(title.toLowerCase()) &&
-        !filtered.some((b) => b["barcode"])
+        !filtered.some((b) => b["barcode"] === book.barcode)
       ) {
         filtered.push(book);
       }
@@ -126,6 +126,7 @@ export async function queryBooks(
       }
     }
   });
+
   return paginateBooks(filtered, page, limit);
 }
 

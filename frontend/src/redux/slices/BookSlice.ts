@@ -323,7 +323,7 @@ export const BookSlice = createSlice({
     builder.addCase(checkoutBook.fulfilled, (state, action) => {
       let bookList: Book[] = JSON.parse(JSON.stringify(state.books));
       bookList = bookList.map((book) => {
-        if (book._id === action.payload.item) {
+        if (book._id === action.payload.items) {
           book.records = [action.payload, ...book.records];
           return book;
         }

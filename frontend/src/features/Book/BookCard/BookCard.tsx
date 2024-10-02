@@ -97,7 +97,7 @@ export const BookCard: React.FC<BookCardProps> = ({ book }) => {
 
   const handleLoan = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    if (user?.type === "EMPLOYEE") {
+    if (user?.type === "EMPLOYEE" || user?.type === "ADMIN") {
       dispatch(setCurrentBook(book));
       dispatch(setDisplayLoan(true));
     }
@@ -108,42 +108,58 @@ export const BookCard: React.FC<BookCardProps> = ({ book }) => {
   };
 
   const isAvailable =
-    book.records.length === 0 || book.records[0].status === "AVAILABLE";
+    (book.records?.length ?? 0) === 0 ||
+    book.records?.[0]?.status === "AVAILABLE";
 
   useEffect(() => {
-    let baseClass = "w-full py-2 rounded-md mt-4 text-center ";
+    let baseClass =
+      "w-full py-2 rounded-md mt-4 text-center transition duration-200 ";
     if (isAvailable) {
       baseClass += "bg-green-500 text-white hover:bg-green-600 ";
     } else {
       baseClass += "bg-red-500 text-white hover:bg-red-600 ";
     }
-    if (user && user.type === "EMPLOYEE" && isAvailable) {
-      baseClass += "border-green-700";
-    } else if (user && user.type === "EMPLOYEE" && !isAvailable) {
-      baseClass += "border-red-700";
+    // Apply styles for both EMPLOYEE and ADMIN roles
+    if (
+      user &&
+      (user.type === "EMPLOYEE" || user.type === "ADMIN") &&
+      isAvailable
+    ) {
+      baseClass += "border-2 border-green-700";
+    } else if (
+      user &&
+      (user.type === "EMPLOYEE" || user.type === "ADMIN") &&
+      !isAvailable
+    ) {
+      baseClass += "border-2 border-red-700";
     }
     setButtonClass(baseClass);
   }, [isAvailable, user?.type]);
 
   return (
     <div
-      className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300 cursor-pointer flex flex-col justify-between"
+      className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300 cursor-pointer flex flex-col justify-between"
       id="book-card"
       onClick={displayBook}
     >
       <img
         src={book.cover}
         alt={book.title}
-        className="w-full h-48 object-cover rounded-t-lg mb-4"
+        className="w-full h-48 object-cover rounded-lg mb-4 transition-transform duration-300 transform hover:scale-105"
       />
-      <div className="flex-1">
-        <h1 className="text-xl font-bold mb-2">{book.title}</h1>
-        <h3 className="text-md text-gray-600 mb-2">
+      <div className="flex-1 font-serif">
+        <h1 className="text-2xl font-bold my-2 text-gray-800">{book.title}</h1>
+        <h3 className="text-sm text-gray-600 my-2">
           {mapAuthorsToString(book)}
         </h3>
-        <p className="text-sm text-gray-700 line-clamp-3">{book.description}</p>
+        <p className="text-sm text-gray-700 line-clamp-3 mb-4">
+          {book.description}
+        </p>
       </div>
-      <button className={buttonClass} onClick={handleLoan}>
+      <button
+        onClick={handleLoan}
+        className={`${buttonClass} font-bold text-sm md:text-md`}
+      >
         Status: {isAvailable ? "AVAILABLE" : "UNAVAILABLE"}
       </button>
     </div>

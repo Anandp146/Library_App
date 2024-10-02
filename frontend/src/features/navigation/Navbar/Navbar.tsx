@@ -31,7 +31,7 @@ export const Navbar: React.FC = () => {
   const handleSearchIconClicked = () => {
     if (searchRef && searchRef.current && searchRef.current.value.length > 0) {
       navigate(
-        `/catalog?barcode-${searchRef.current.value}&title-${searchRef.current.value}&description-${searchRef.current.value}`
+        `/catalog?barcode=${searchRef.current.value}&title=${searchRef.current.value}&description=${searchRef.current.value}`
       );
       searchRef.current.value = "";
     }

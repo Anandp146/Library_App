@@ -103,12 +103,12 @@ export const BookOverview: React.FC = () => {
               <div className="p-4 rounded-lg shadow-md bg-white">
                 <BookAddInfo book={currentBook} />
               </div>
-              {user?.type === "EMPLOYEE" && (
+              {(user?.type === "EMPLOYEE" || user?.type === "ADMIN") && (
                 <div className="p-4 rounded-lg shadow-md bg-white">
                   <History book={currentBook} />
                 </div>
               )}
-              {user?.type === "ADMIN" && (
+              {(user?.type === "ADMIN" || user?.type === "EMPLOYEE") && (
                 <div className="flex space-x-4 mt-4">
                   <button
                     onClick={() => setIsEditing(true)}

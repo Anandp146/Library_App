@@ -91,13 +91,13 @@ function queryBooks(page, limit, title, barcode, description, author, subject, g
         books.forEach((book) => {
             if (barcode) {
                 if (book.barcode.toLowerCase().includes(barcode.toLowerCase()) &&
-                    !filtered.some((b) => b["barcode"])) {
+                    !filtered.some((b) => b["barcode"] === book.barcode)) {
                     filtered.push(book);
                 }
             }
             if (title) {
                 if (book.title.toLowerCase().includes(title.toLowerCase()) &&
-                    !filtered.some((b) => b["barcode"])) {
+                    !filtered.some((b) => b["barcode"] === book.barcode)) {
                     filtered.push(book);
                 }
             }
