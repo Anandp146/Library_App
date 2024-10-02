@@ -144,6 +144,7 @@
 import Joi, { ObjectSchema } from "joi";
 import { NextFunction, Request, Response } from "express";
 import { IUser, IUserModel } from "../models/User";
+import { IBook, IBookModel } from "../models/Book";
 export function validateSchema(schema: ObjectSchema, property: string) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -198,42 +199,56 @@ export const Schemas = {
       email: Joi.string()
         .regex(/[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/)
         .required(),
-      password: Joi.string().required(),
+      password: Joi.string(),
     }),
   },
   book: {
-    create: Joi.object({
+    create: Joi.object<IBook>({
       barcode: Joi.string()
         .pattern(/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/)
         .required(),
       cover: Joi.string().required(),
       title: Joi.string().required(),
-      authors: Joi.array().items(Joi.string()).required(),
+      authors: Joi.array().required(),
       description: Joi.string().required(),
-      subjects: Joi.array().items(Joi.string()).required(),
+      subjects: Joi.array().required(),
       publicationDate: Joi.date().required(),
       publisher: Joi.string().required(),
-      pages: Joi.number().integer().required(),
+      pages: Joi.number().required(),
       genre: Joi.string().required(),
     }),
-    update: Joi.object({
-      _id: Joi.string()
-        .regex(/^[0-9a-fA-F]{24}$/)
-        .required(),
+    update: Joi.object<IBookModel>({
+      _id: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
       barcode: Joi.string()
-        .regex(/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/)
+        .pattern(/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/)
         .required(),
       cover: Joi.string().required(),
       title: Joi.string().required(),
-      authors: Joi.array().items(Joi.string()).required(),
+      authors: Joi.array().required(),
       description: Joi.string().required(),
-      subjects: Joi.array().items(Joi.string()).required(),
+      subjects: Joi.array().required(),
       publicationDate: Joi.date().required(),
       publisher: Joi.string().required(),
-      pages: Joi.number().integer().required(),
+      pages: Joi.number().required(),
       genre: Joi.string().required(),
     }),
-    delete: Joi.object({
+
+    // update: Joi.object<IBookModel>({
+    //   _id: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
+    //   barcode: Joi.string()
+    //     .regex(/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/)
+    //     .required(),
+    //   cover: Joi.string().required(),
+    //   title: Joi.string().required(),
+    //   authors: Joi.array().required(),
+    //   description: Joi.string().required(),
+    //   subjects: Joi.array().required(),
+    //   publicationDate: Joi.date().required(),
+    //   publisher: Joi.string().required(),
+    //   pages: Joi.number().required(),
+    //   genre: Joi.string().required(),
+    // }),
+    delete: Joi.object<{ barcode: string }>({
       barcode: Joi.string()
         .regex(/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/)
         .required(),

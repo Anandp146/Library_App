@@ -30,7 +30,7 @@ const validation_1 = require("../middlewares/validation");
 const router = express_1.default.Router();
 router.get("/", BookController_1.default.getAllBooks);
 router.post("/", (0, validation_1.validateSchema)(validation_1.Schemas.book.create, "body"), BookController_1.default.createBook);
-router.put("/", (0, validation_1.validateSchema)(validation_1.Schemas.book.update, "body"), BookController_1.default.updateBook);
+router.put("/:barcode", (0, validation_1.validateSchema)(validation_1.Schemas.book.update, "body"), BookController_1.default.updateBook);
 router.delete("/:barcode", (0, validation_1.validateSchema)(validation_1.Schemas.book.delete, "params"), BookController_1.default.deleteBook);
 router.get("/query", BookController_1.default.searchForBooksByQuery);
 module.exports = router;

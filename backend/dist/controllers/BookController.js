@@ -8,8 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const BookService_1 = require("../services/BookService");
+const Book_1 = __importDefault(require("../models/Book"));
 const libraryErrors_1 = require("../utils/libraryErrors");
 // Function to retrieve all books
 function getAllBooks(req, res) {
@@ -52,26 +56,35 @@ function createBook(req, res) {
 // Function to update an existing book
 function updateBook(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const book = req.body;
+        const { barcode } = req.params;
+        const bookData = req.body;
         try {
-            const updatedBook = yield (0, BookService_1.modifyBook)(book);
-            res.status(202).json({
-                message: "Book updated successfully",
-                book: updatedBook,
+            // Validate if the bookData contains all required fields
+            if (!bookData || Object.keys(bookData).length === 0) {
+                return res.status(422).json({ message: "No data provided to update" });
+            }
+            // Update the book by barcode
+            const updatedBook = yield Book_1.default.findOneAndUpdate({ barcode }, bookData, {
+                new: true,
             });
+            if (!updatedBook) {
+                return res.status(404).json({ message: "Book not found" });
+            }
+            return res
+                .status(202)
+                .json({ message: "Book Updated Successfully ", updatedBook });
         }
         catch (error) {
+            console.error(error);
             if (error instanceof libraryErrors_1.BookDoesNotExistError) {
-                res.status(404).json({
-                    message: "Cannot update book that does not exist",
-                    error: error.message,
-                });
+                res
+                    .status(404)
+                    .json({ message: "annot update bok that does not exit", error });
             }
             else {
-                res.status(500).json({
-                    message: "Unable to update book at this time",
-                    error: error.message,
-                });
+                res
+                    .status(500)
+                    .json({ message: "Unable to update book at this time", error });
             }
         }
     });

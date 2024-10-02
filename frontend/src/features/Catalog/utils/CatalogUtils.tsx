@@ -1,22 +1,67 @@
 import { Book } from "../../../models/Book";
 import { PageInfo } from "../../../models/Page";
 
-export function generateRandomGenres(): string[] {
-  let choices = [
-    "Non-Fiction",
-    "Childrens",
-    "Fantasy",
-    "Fiction",
-    "Biography",
-    "Romance",
-    "Science Fiction",
-    "Young Adult",
-  ];
-  let chosen: string[] = [];
-  while (chosen.length !== 5) {
-    let num = Math.floor(Math.random() * choices.length);
-    if (!chosen.includes(choices[num])) chosen.push(choices[num]);
+// export function generateRandomGenres(): string[] {
+//   let choices = [
+//     "Non-Fiction",
+//     "Childrens",
+//     "Fantasy",
+//     "Fiction",
+//     "Biography",
+//     "Romance",
+//     "Science Fiction",
+//     "Young Adult",
+//   ];
+//   let chosen: string[] = [];
+//   while (chosen.length !== 5) {
+//     let num = Math.floor(Math.random() * choices.length);
+//     if (!chosen.includes(choices[num])) chosen.push(choices[num]);
+//   }
+//   return chosen;
+// }
+
+/**
+ * Dynamically generates random genres from the books data.
+ * @param books Array of Book objects
+ * @returns Array of 5 randomly selected genres from the book data
+ */
+export function generateRandomGenres(books: Book[] = []): string[] {
+  // Check if books array is valid and has elements
+  if (!books || books.length === 0) {
+    console.error("Books array is undefined or empty.");
+    return [];
   }
+
+  const genresSet = new Set<string>();
+
+  // Collect unique genres from books
+  books.forEach((book) => {
+    if (book.genre) {
+      genresSet.add(book.genre);
+    }
+  });
+
+  const genres = Array.from(genresSet); // Convert Set to Array
+
+  // If there are fewer than 5 unique genres, return them all
+  if (genres.length <= 5) {
+    return genres;
+  }
+
+  const chosen: string[] = [];
+  const usedIndices = new Set<number>();
+
+  // Randomly select up to 5 genres
+  while (chosen.length < 5) {
+    const randomIndex = Math.floor(Math.random() * genres.length);
+
+    // Ensure the same genre is not chosen twice
+    if (!usedIndices.has(randomIndex)) {
+      chosen.push(genres[randomIndex]);
+      usedIndices.add(randomIndex);
+    }
+  }
+
   return chosen;
 }
 
@@ -30,6 +75,18 @@ export function getRandomBooksByGenre(genre: string, books: Book[]) {
       randomBooks.push(filtered[index]);
   }
   return randomBooks;
+}
+export function getRandomBooks(books: Book[], count: number): Book[] {
+  if (books.length === 0) return [];
+
+  // Clone the array before shuffling it
+  const clonedBooks = [...books];
+
+  // Shuffle the cloned array
+  const shuffled = clonedBooks.sort(() => 0.5 - Math.random());
+
+  // Return the first `count` books
+  return shuffled.slice(0, Math.min(count, shuffled.length));
 }
 
 export function calculatePaging(pageInfo: PageInfo): string[] {

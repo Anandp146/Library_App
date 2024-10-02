@@ -9,7 +9,7 @@ export type Book = {
   authors: string[];
   description: string;
   subjects: string[];
-  publicationDate: Date;
+  publicationDate: Date | string | null; // Accept both Date and string types
   publisher: string;
   pages: number;
   genre: string;

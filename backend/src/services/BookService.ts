@@ -2,7 +2,7 @@ import BookDao, { IBookModel } from "../models/Book";
 import { IBook } from "../models/Book";
 import { IPagination } from "../models/Pagination";
 import { BookDoesNotExistError } from "../utils/libraryErrors";
-
+import { Types } from "mongoose";
 // Retrieve all books
 export async function findAllBooks(): Promise<IBookModel[]> {
   try {
@@ -25,16 +25,12 @@ export async function findBookById(id: string): Promise<IBookModel> {
 // Modify a book
 export async function modifyBook(book: IBookModel): Promise<IBookModel> {
   try {
-    const updatedBook = await BookDao.findOneAndUpdate(
-      { barcode: book.barcode },
-      book,
-      { new: true }
-    );
-    if (updatedBook) return updatedBook;
-    throw new BookDoesNotExistError(
-      "The book you are trying to modify does not exist"
-    );
-  } catch (error) {
+    // Save the updated book document
+    const updatedBook = await book.save();
+
+    return updatedBook;
+  } catch (error: any) {
+    console.error("Error modifying book:", error);
     throw error;
   }
 }

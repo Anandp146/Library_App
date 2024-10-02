@@ -36,10 +36,11 @@ router.post(
   BookController.createBook
 );
 router.put(
-  "/",
+  "/:barcode",
   validateSchema(Schemas.book.update, "body"),
   BookController.updateBook
 );
+
 router.delete(
   "/:barcode",
   validateSchema(Schemas.book.delete, "params"),

@@ -1,13 +1,15 @@
+// src/features/Book/BookUtil.tsx
+
 import { Book } from "../../../models/Book";
 import { BookCheckOut } from "../CheckOut/BookCheckOut";
 import { BookCheckin } from "../BookCheckIn/BookCheckin";
-export function mapAuthorsToString(book: Book) {
-  let authors = "";
-  for (let author of book.authors) {
-    authors + author;
-    authors += ", ";
+
+export function mapAuthorsToString(book: Book): string {
+  if (!Array.isArray(book.authors)) {
+    console.warn("book.authors is not an array:", book.authors);
+    return "";
   }
-  return authors.slice(0, authors.length - 2);
+  return book.authors.join(", ");
 }
 
 export function determineLoanModalContent(book: Book): JSX.Element {

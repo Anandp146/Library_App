@@ -26,7 +26,6 @@ const initialState: BookSliceState = {
   pagingInformation: null,
 };
 // Create a book
-
 export const createBook = createAsyncThunk(
   "book/create",
   async (book: Book, thunkAPI) => {
@@ -43,6 +42,62 @@ export const createBook = createAsyncThunk(
     }
   }
 );
+// export const updateBook = createAsyncThunk(
+//   "book/updateBook",
+//   async (
+//     { barcode, book }: { barcode: string; book: Book },
+//     { rejectWithValue }
+//   ) => {
+//     try {
+//       const response = await axios.put(
+//         `http://localhost:8000/book/${barcode}`,
+//         book,
+//         {
+//           headers: {
+//             "Content-Type": "application/json", // Specify content type if necessary
+//           },
+//         }
+//       );
+//       return response.data;
+//     } catch (error: any) {
+//       console.error("Error during book update:", error.response.data);
+//       return rejectWithValue(error.response.data); // This returns the error to the component
+//     }
+//   }
+// );
+export const updateBook = createAsyncThunk(
+  "book/updateBook",
+  async ({ barcode, book }: { barcode: string; book: Book }) => {
+    const response = await axios.put(
+      `http://localhost:8000/book/${barcode}`,
+      book
+    );
+    return response.data;
+  }
+);
+
+// Delete a book
+export const deleteBook = createAsyncThunk<string, string>(
+  "book/delete",
+  async (id: string, thunkAPI) => {
+    try {
+      // Make the DELETE request
+      await axios.delete(`http://localhost:8000/book/${id}`);
+
+      return id; // Return the ID of the deleted book
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        // Handle known errors
+        return thunkAPI.rejectWithValue(
+          error.response?.data?.message || "Failed to delete book"
+        );
+      }
+      // Handle unknown errors
+      return thunkAPI.rejectWithValue("An unknown error occurred");
+    }
+  }
+);
+
 export const fetchAllBooks = createAsyncThunk(
   "book/all",
   async (payload, thunkAPI) => {
@@ -148,6 +203,20 @@ export const BookSlice = createSlice({
   name: "book",
   initialState,
   reducers: {
+    updateCurrentBook: (state, action) => {
+      // Update the current book in the store
+      // if (state.currentBook?.barcode === action.payload.barcode) {
+      //   state.currentBook = action.payload; // Update the current book with the new data
+      // }
+      state.currentBook = action.payload;
+      // Optionally update the items list if needed
+      const index = state.books.findIndex(
+        (book) => book.barcode === action.payload.barcode
+      );
+      if (index !== -1) {
+        state.books[index] = action.payload; // Update the book list too
+      }
+    },
     resetError(state) {
       state.error = false;
       state.errorMessage = null;
@@ -166,7 +235,7 @@ export const BookSlice = createSlice({
         ...state,
         books: [],
         loading: true,
-        // error: false, // Reset error state on pending
+        error: false, // Reset error state on pending
       };
     });
     builder.addCase(queryBooks.pending, (state, action) => {
@@ -182,6 +251,27 @@ export const BookSlice = createSlice({
       state.error = false;
       state.errorMessage = null;
     });
+    builder.addCase(updateBook.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(updateBook.fulfilled, (state, action) => {
+      state.loading = false;
+      const updatedBook = action.payload;
+      state.books = state.books.map((book) =>
+        book.barcode === updatedBook.barcode ? updatedBook : book
+      );
+      state.currentBook = updatedBook; // Ensure the currentBook is updated
+    });
+    builder.addCase(updateBook.rejected, (state, action) => {
+      state.loading = false;
+      state.errorMessage = action.payload as string; // Ensure you're capturing the error
+    });
+    builder.addCase(
+      deleteBook.fulfilled,
+      (state, action: PayloadAction<string>) => {
+        state.books = state.books.filter((book) => book._id !== action.payload); // remove the book from the list
+      }
+    );
     builder.addCase(
       createBook.fulfilled,
       (state, action: PayloadAction<Book>) => {
@@ -280,5 +370,6 @@ export const BookSlice = createSlice({
   },
 });
 
-export const { setCurrentBook, resetError } = BookSlice.actions;
+export const { setCurrentBook, resetError, updateCurrentBook } =
+  BookSlice.actions;
 export default BookSlice.reducer;

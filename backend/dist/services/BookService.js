@@ -45,12 +45,12 @@ exports.findBookById = findBookById;
 function modifyBook(book) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const updatedBook = yield Book_1.default.findOneAndUpdate({ barcode: book.barcode }, book, { new: true });
-            if (updatedBook)
-                return updatedBook;
-            throw new libraryErrors_1.BookDoesNotExistError("The book you are trying to modify does not exist");
+            // Save the updated book document
+            const updatedBook = yield book.save();
+            return updatedBook;
         }
         catch (error) {
+            console.error("Error modifying book:", error);
             throw error;
         }
     });

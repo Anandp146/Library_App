@@ -210,7 +210,7 @@ exports.Schemas = {
             email: joi_1.default.string()
                 .regex(/[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/)
                 .required(),
-            password: joi_1.default.string().required(),
+            password: joi_1.default.string(),
         }),
     },
     book: {
@@ -220,31 +220,44 @@ exports.Schemas = {
                 .required(),
             cover: joi_1.default.string().required(),
             title: joi_1.default.string().required(),
-            authors: joi_1.default.array().items(joi_1.default.string()).required(),
+            authors: joi_1.default.array().required(),
             description: joi_1.default.string().required(),
-            subjects: joi_1.default.array().items(joi_1.default.string()).required(),
+            subjects: joi_1.default.array().required(),
             publicationDate: joi_1.default.date().required(),
             publisher: joi_1.default.string().required(),
-            pages: joi_1.default.number().integer().required(),
+            pages: joi_1.default.number().required(),
             genre: joi_1.default.string().required(),
         }),
         update: joi_1.default.object({
-            _id: joi_1.default.string()
-                .regex(/^[0-9a-fA-F]{24}$/)
-                .required(),
+            _id: joi_1.default.string().regex(/^[0-9a-fA-F]{24}$/),
             barcode: joi_1.default.string()
-                .regex(/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/)
+                .pattern(/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/)
                 .required(),
             cover: joi_1.default.string().required(),
             title: joi_1.default.string().required(),
-            authors: joi_1.default.array().items(joi_1.default.string()).required(),
+            authors: joi_1.default.array().required(),
             description: joi_1.default.string().required(),
-            subjects: joi_1.default.array().items(joi_1.default.string()).required(),
+            subjects: joi_1.default.array().required(),
             publicationDate: joi_1.default.date().required(),
             publisher: joi_1.default.string().required(),
-            pages: joi_1.default.number().integer().required(),
+            pages: joi_1.default.number().required(),
             genre: joi_1.default.string().required(),
         }),
+        // update: Joi.object<IBookModel>({
+        //   _id: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
+        //   barcode: Joi.string()
+        //     .regex(/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/)
+        //     .required(),
+        //   cover: Joi.string().required(),
+        //   title: Joi.string().required(),
+        //   authors: Joi.array().required(),
+        //   description: Joi.string().required(),
+        //   subjects: Joi.array().required(),
+        //   publicationDate: Joi.date().required(),
+        //   publisher: Joi.string().required(),
+        //   pages: Joi.number().required(),
+        //   genre: Joi.string().required(),
+        // }),
         delete: joi_1.default.object({
             barcode: joi_1.default.string()
                 .regex(/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/)

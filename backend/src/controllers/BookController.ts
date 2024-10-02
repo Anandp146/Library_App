@@ -6,7 +6,7 @@ import {
   removeBook,
   queryBooks,
 } from "../services/BookService";
-import { IBook } from "../models/Book";
+import Book, { IBook, IBookModel } from "../models/Book";
 import { BookDoesNotExistError } from "../utils/libraryErrors";
 
 // Function to retrieve all books
@@ -44,25 +44,35 @@ async function createBook(req: Request, res: Response): Promise<void> {
 }
 
 // Function to update an existing book
-async function updateBook(req: Request, res: Response): Promise<void> {
-  const book = req.body;
+async function updateBook(req: Request, res: Response) {
+  const { barcode } = req.params;
+  const bookData = req.body;
   try {
-    const updatedBook = await modifyBook(book);
-    res.status(202).json({
-      message: "Book updated successfully",
-      book: updatedBook,
+    // Validate if the bookData contains all required fields
+    if (!bookData || Object.keys(bookData).length === 0) {
+      return res.status(422).json({ message: "No data provided to update" });
+    }
+
+    // Update the book by barcode
+    const updatedBook = await Book.findOneAndUpdate({ barcode }, bookData, {
+      new: true,
     });
+    if (!updatedBook) {
+      return res.status(404).json({ message: "Book not found" });
+    }
+    return res
+      .status(202)
+      .json({ message: "Book Updated Successfully ", updatedBook });
   } catch (error: any) {
+    console.error(error);
     if (error instanceof BookDoesNotExistError) {
-      res.status(404).json({
-        message: "Cannot update book that does not exist",
-        error: error.message,
-      });
+      res
+        .status(404)
+        .json({ message: "annot update bok that does not exit", error });
     } else {
-      res.status(500).json({
-        message: "Unable to update book at this time",
-        error: error.message,
-      });
+      res
+        .status(500)
+        .json({ message: "Unable to update book at this time", error });
     }
   }
 }

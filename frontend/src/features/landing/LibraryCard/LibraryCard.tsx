@@ -20,7 +20,7 @@ export const LibraryCard: React.FC = () => {
     //     </span>
     //   </p>
     // </div>
-    <div className="bg-white p-6 rounded-lg shadow-md w-full  text-center">
+    <div className="bg-white p-10 rounded-lg shadow-md w-full  text-center">
       <h2 className="text-xl font-bold mb-4">Get A Library Card</h2>
       <img
         src={libraryCard}

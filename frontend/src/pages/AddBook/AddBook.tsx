@@ -63,7 +63,11 @@ const AddBook: React.FC = () => {
         genre: "",
       });
     } catch (error) {
-      console.error("Failed to add book:", error);
+      if (error instanceof Error) {
+        console.error("Failed to add book:", error.message); // Log the error message
+      } else {
+        console.error("Failed to add book:", error); // Handle unknown error
+      }
     }
   };
 
