@@ -65,14 +65,12 @@ const BookEdit: React.FC<BookEditProps> = ({ book, onClose, onUpdate }) => {
       authors: formData.authors.split(",").map((author) => author.trim()), // Array
       description: formData.description.trim(),
       subjects: formData.subjects.split(",").map((subject) => subject.trim()), // Array
-      // Ensure publicationDate is a string or a Date object, not null
       publicationDate: formData.publicationDate
         ? new Date(formData.publicationDate).toISOString()
-        : new Date().toISOString(), // Provide a default date instead of null
+        : null,
       publisher: formData.publisher.trim(),
       pages: Number(formData.pages) || 0, // Ensure this is a number
       genre: formData.genre.trim(),
-      records: [],
     };
 
     console.log("Updated book payload being sent:", updatedBook);
