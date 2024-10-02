@@ -13,7 +13,7 @@ export type Book = {
   publisher: string;
   pages: number;
   genre: string;
-  records: LoanRecord[];
+  records?: LoanRecord[];
 };
 export type CreateBookPayload = {
   barcode: string; // Ensure this is a valid string

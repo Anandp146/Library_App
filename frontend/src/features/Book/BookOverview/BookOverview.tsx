@@ -58,14 +58,15 @@ export const BookOverview: React.FC = () => {
         subjects: Array.isArray(updatedBook.subjects)
           ? updatedBook.subjects.map((subject) => subject.trim())
           : [], // Fallback to an empty array if subjects is not defined
-        publicationDate: new Date(updatedBook.publicationDate).toISOString(), // Ensure a valid ISO string
+        publicationDate: updatedBook.publicationDate
+          ? new Date(updatedBook.publicationDate).toISOString() // Handle valid date or string
+          : new Date().toISOString(), // Fallback to the current date if it's null
         pages: Number(updatedBook.pages) || 0, // Default to 0 if pages is not a valid number
       };
 
       console.log("Formatted Book Payload:", formattedBook);
 
       // Dispatch the update book action
-
       const updatedData = await dispatch(
         updateBook({ barcode: formattedBook.barcode, book: formattedBook })
       ).unwrap();

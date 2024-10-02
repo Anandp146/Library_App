@@ -242,6 +242,7 @@ exports.Schemas = {
             publisher: joi_1.default.string().required(),
             pages: joi_1.default.number().required(),
             genre: joi_1.default.string().required(),
+            records: joi_1.default.array().required(),
         }),
         // update: Joi.object<IBookModel>({
         //   _id: Joi.string().regex(/^[0-9a-fA-F]{24}$/),

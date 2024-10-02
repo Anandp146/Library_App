@@ -145,6 +145,7 @@ import Joi, { ObjectSchema } from "joi";
 import { NextFunction, Request, Response } from "express";
 import { IUser, IUserModel } from "../models/User";
 import { IBook, IBookModel } from "../models/Book";
+import { record } from "zod";
 export function validateSchema(schema: ObjectSchema, property: string) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -231,6 +232,7 @@ export const Schemas = {
       publisher: Joi.string().required(),
       pages: Joi.number().required(),
       genre: Joi.string().required(),
+      records: Joi.array().required(),
     }),
 
     // update: Joi.object<IBookModel>({

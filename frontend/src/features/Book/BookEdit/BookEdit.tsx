@@ -28,6 +28,7 @@ const BookEdit: React.FC<BookEditProps> = ({ book, onClose, onUpdate }) => {
     publisher: book.publisher || "",
     pages: book.pages || 0,
     genre: book.genre || "",
+    records: book.records || [],
   });
 
   // Effect to set form data when the book prop changes
@@ -45,6 +46,7 @@ const BookEdit: React.FC<BookEditProps> = ({ book, onClose, onUpdate }) => {
       publisher: book.publisher || "",
       pages: book.pages || 0,
       genre: book.genre || "",
+      records: book.records || [],
     });
   }, [book]);
 
@@ -71,6 +73,7 @@ const BookEdit: React.FC<BookEditProps> = ({ book, onClose, onUpdate }) => {
       publisher: formData.publisher.trim(),
       pages: Number(formData.pages) || 0, // Ensure this is a number
       genre: formData.genre.trim(),
+      records: formData.records,
     };
 
     console.log("Updated book payload being sent:", updatedBook);
